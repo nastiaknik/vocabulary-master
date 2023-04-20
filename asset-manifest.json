@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/vocabulary-master/static/css/main.4bd90056.css",
+    "main.js": "/vocabulary-master/static/js/main.1fabbad2.js",
+    "index.html": "/vocabulary-master/index.html",
+    "main.4bd90056.css.map": "/vocabulary-master/static/css/main.4bd90056.css.map",
+    "main.1fabbad2.js.map": "/vocabulary-master/static/js/main.1fabbad2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4bd90056.css",
+    "static/js/main.1fabbad2.js"
+  ]
+}
