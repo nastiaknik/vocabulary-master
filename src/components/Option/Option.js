@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { OptionButton } from './Option.styled';
 
 export const Option = ({
@@ -35,4 +36,21 @@ export const Option = ({
       {/* {isSelected && correct !== null && (isCorrect ? '✅' : '❌')} */}
     </OptionButton>
   );
+};
+
+Option.propTypes = {
+  option: PropTypes.string.isRequired,
+  handleAnswerClick: PropTypes.func.isRequired,
+  question: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    question: PropTypes.string.isRequired,
+    options: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    correctAnswer: PropTypes.string.isRequired,
+    selectedOption: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.oneOf([null]),
+    ]),
+  }).isRequired,
+  selectedOption: PropTypes.string,
+  correct: PropTypes.bool,
 };

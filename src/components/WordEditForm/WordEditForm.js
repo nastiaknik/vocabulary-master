@@ -41,7 +41,6 @@ export function WordEditForm({ word }) {
       );
     }
 
-    dispatch(editWord(word));
     dispatch(editWord({ ...word, engWord, translation }));
     event.currentTarget.reset();
     handleClose();

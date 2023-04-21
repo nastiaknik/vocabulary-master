@@ -8,6 +8,7 @@ import {
   resetQuiz,
 } from '../../redux/quizSlice';
 import { checkWord } from 'redux/oparations';
+import PropTypes from 'prop-types';
 import { Report } from 'notiflix';
 import { Option } from 'components/Option/Option';
 import Button from 'components/Button/Button';
@@ -106,7 +107,6 @@ export const Quiz = ({ vocabulary, isLoading }) => {
       updatedQuestion.selectedOption = option;
       updatedQuestion.options = quizQuestions[currentQuestion].options;
       updatedQuestions[currentQuestion] = updatedQuestion;
-      console.log(updatedQuestion);
       dispatch(answerQuestion(updatedQuestion));
     } else {
       dispatch(finishQuiz());
@@ -213,4 +213,16 @@ export const Quiz = ({ vocabulary, isLoading }) => {
       {/*   )} */}
     </>
   );
+};
+
+Quiz.propTypes = {
+  vocabulary: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      engWord: PropTypes.string.isRequired,
+      translation: PropTypes.string.isRequired,
+      isChecked: PropTypes.bool.isRequired,
+    })
+  ).isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };

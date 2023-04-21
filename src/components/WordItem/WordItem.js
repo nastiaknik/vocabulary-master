@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { deleteWord, checkWord } from 'redux/oparations';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 import { FormControlLabel, Checkbox } from '@mui/material';
-import { deleteWord, checkWord } from 'redux/oparations';
+import PropTypes from 'prop-types';
 import { WordEditForm } from 'components/WordEditForm/WordEditForm';
 import {
   Item,
@@ -86,4 +87,13 @@ export const WordItem = ({ word, page }) => {
       </DeleteBtn>
     </Item>
   );
+};
+
+WordItem.propTypes = {
+  word: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    engWord: PropTypes.string.isRequired,
+    translation: PropTypes.string.isRequired,
+    isChecked: PropTypes.bool.isRequired,
+  }),
 };
