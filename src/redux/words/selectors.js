@@ -34,3 +34,5 @@ export const selectUnknownEngWords = createSelector(
     return words.map(word => word.engWord);
   }
 );
+
+export const selectIsLoading = state => state.words.isLoading;

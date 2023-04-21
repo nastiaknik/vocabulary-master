@@ -9,3 +9,16 @@ export const OptionList = styled.ul`
   justify-content: center;
   gap: 5px;
 `;
+
+export const Result = styled.h2`
+  color: #ffa500;
+  border-radius: 8px;
+  font-size: 24px;
+`;
+
+export const Score = styled.p`
+  font-size: 48px;
+  text-align: center;
+  color: #ffa500;
+  margin-top: 10px;
+`;

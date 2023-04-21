@@ -7,12 +7,14 @@ import {
   finishQuiz,
   resetQuiz,
 } from '../../redux/quizSlice';
+import { checkWord } from 'redux/oparations';
+import { Report } from 'notiflix';
 import { Option } from 'components/Option/Option';
 import Button from 'components/Button/Button';
-import { OptionList } from './Quiz.styled';
-import { Report } from 'notiflix';
+/* import Loader from 'components/Skeleton'; */
+import { OptionList, Result, Score } from './Quiz.styled';
 
-export const Quiz = ({ vocabulary }) => {
+export const Quiz = ({ vocabulary, isLoading }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [currentQuestionData, setCurrentQuestionData] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -66,7 +68,7 @@ export const Quiz = ({ vocabulary }) => {
     .slice(0, 10);
 
   const handleStartQuiz = () => {
-    if (vocabulary.length < 4) {
+    if (vocabulary.length < 4 && !isLoading) {
       Report.failure('Oops!', 'Add at least 4 words to start a quiz.');
       return;
     }
@@ -99,10 +101,16 @@ export const Quiz = ({ vocabulary }) => {
 
     const updatedQuestions = [...quizQuestions];
     const updatedQuestion = { ...updatedQuestions[currentQuestion] };
-    updatedQuestion.selectedOption = option;
-    updatedQuestions[currentQuestion] = updatedQuestion;
 
-    dispatch(answerQuestion(updatedQuestion));
+    if (currentQuestion < quizQuestions.length) {
+      updatedQuestion.selectedOption = option;
+      updatedQuestion.options = quizQuestions[currentQuestion].options;
+      updatedQuestions[currentQuestion] = updatedQuestion;
+      console.log(updatedQuestion);
+      dispatch(answerQuestion(updatedQuestion));
+    } else {
+      dispatch(finishQuiz());
+    }
 
     setTimeout(() => {
       const nextQuestionIndex = currentQuestion + 1;
@@ -118,9 +126,22 @@ export const Quiz = ({ vocabulary }) => {
       setSelectedOption(null);
       setCorrect(null);
     }, 1000);
+
+    const updatedWord = vocabulary.find(word => word.id === updatedQuestion.id);
+
+    if (isCorrect) {
+      dispatch(checkWord({ ...updatedWord, isChecked: true }));
+    } else if (!isCorrect) {
+      dispatch(checkWord({ ...updatedWord, isChecked: false }));
+    }
   };
 
   const handleTryAgain = () => {
+    if (vocabulary.length < 4 && !isLoading) {
+      Report.failure('Oops!', 'Add at least 4 words to start a quiz.');
+      return;
+    }
+
     setCurrentQuestion(0);
 
     const resetQuestions = quizQuestions.map(question => ({
@@ -136,59 +157,60 @@ export const Quiz = ({ vocabulary }) => {
   };
 
   return (
-    <div>
-      {!quizStarted && (
-        <Button type="button" onClick={handleStartQuiz} label="Start Quiz" />
-      )}
+    <>
+      {/*  {isLoading ? (
+        <Loader page="/training" />
+      ) : ( */}
+      <>
+        <div>
+          {!quizStarted && (
+            <Button
+              type="button"
+              onClick={handleStartQuiz}
+              label="Start Quiz"
+              disabled={isLoading}
+            />
+          )}
 
-      {currentQuestionData && quizStarted && !quizComplete && (
-        <>
-          <h2>{currentQuestionData.question}</h2>
-          <OptionList>
-            {currentQuestionData.options.map(option => (
-              <Option
-                option={option}
-                key={option}
-                handleAnswerClick={handleAnswerClick}
-                question={currentQuestionData}
-                selectedOption={selectedOption}
-                correct={correct}
+          {currentQuestionData && quizStarted && !quizComplete && (
+            <>
+              <h2>{currentQuestionData.question}</h2>
+              <OptionList>
+                {currentQuestionData.options.map(option => (
+                  <Option
+                    option={option}
+                    key={option}
+                    handleAnswerClick={handleAnswerClick}
+                    question={currentQuestionData}
+                    selectedOption={selectedOption}
+                    correct={correct}
+                  />
+                ))}
+              </OptionList>
+              <Button
+                type="button"
+                onClick={handleNextQuestionClick}
+                label="Next Question"
               />
-            ))}
-          </OptionList>
-          <Button
-            type="button"
-            onClick={handleNextQuestionClick}
-            label="Next Question"
-          />
-        </>
-      )}
-      {quizComplete && (
-        <>
-          <h2
-            style={{
-              color: '#FFA500',
-              textAlign: 'center',
-              borderRadius: '8px',
-              fontSize: '24px',
-            }}
-          >
-            Your score:
-          </h2>
-          <p
-            style={{
-              fontSize: '48px',
-              textAlign: 'center',
-              color: '#FFA500',
-              marginTop: '10px',
-            }}
-          >
-            {/* Your score is: */} {score} / {quizQuestions.length}
-          </p>
-          {/* <p>{((score / quizQuestions.length) * 100).toFixed(0)}%</p> */}
-          <Button type="button" onClick={handleTryAgain} label="Try Again" />
-        </>
-      )}
-    </div>
+            </>
+          )}
+          {quizComplete && (
+            <>
+              <Result>Your score:</Result>
+              <Score>
+                {/* Your score is: */} {score} / {quizQuestions.length}
+              </Score>
+              {/* <p>{((score / quizQuestions.length) * 100).toFixed(0)}%</p> */}
+              <Button
+                type="button"
+                onClick={handleTryAgain}
+                label="Try Again"
+              />
+            </>
+          )}
+        </div>
+      </>
+      {/*   )} */}
+    </>
   );
 };

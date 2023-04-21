@@ -86,13 +86,42 @@ const Loader = ({ page }) => {
     case '/training':
       return (
         <div>
-          <Skeleton
+          {/* 
+          <Skeleton count={1} width={116} height={40} /> */}
+          {/*  <Skeleton
             count={1}
             width={112}
             height={39}
-            style={{ margin: '23px 0' }}
-          />
-          <Skeleton count={1} width={116} height={40} />
+            style={{ margin: '23px auto' }}
+          /> */}
+          <Skeleton count={1} width={580} height={39}></Skeleton>
+          <BoxOptions>
+            <Skeleton
+              count={1}
+              width={75}
+              height={42}
+              borderRadius={4}
+            ></Skeleton>
+            <Skeleton
+              count={1}
+              width={75}
+              height={42}
+              borderRadius={4}
+            ></Skeleton>
+            <Skeleton
+              count={1}
+              width={75}
+              height={42}
+              borderRadius={4}
+            ></Skeleton>
+            <Skeleton
+              count={1}
+              width={75}
+              height={42}
+              borderRadius={4}
+            ></Skeleton>
+          </BoxOptions>
+          <Skeleton count={1} width={145} height={40}></Skeleton>
         </div>
       );
 
@@ -191,6 +220,24 @@ const Loader = ({ page }) => {
   }
 };
 
+const BoxOptions = ({ children }) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        listStyle: 'none',
+        margin: '15px auto',
+        padding: '5px',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '5px',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 const BoxDictionary = ({ children }) => {
   return (
     <div
@@ -218,7 +265,6 @@ const BoxWord = ({ children }) => {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        /* maxWidth: '551px', */
         width: 'fit-content',
         margin: '10px auto',
         padding: '0',
@@ -232,10 +278,6 @@ const BoxWord = ({ children }) => {
 
 Loader.propTypes = {
   page: PropTypes.string.isRequired,
-};
-
-BoxWord.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default Loader;

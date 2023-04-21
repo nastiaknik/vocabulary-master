@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import {
   fetchWords,
   deleteWord,
@@ -16,10 +16,6 @@ export const wordsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      // fetchWords
-      .addCase(fetchWords.pending, state => {
-        state.isLoading = true;
-      })
       .addCase(fetchWords.fulfilled, (state, action) => {
         return {
           items: action.payload,
@@ -27,38 +23,16 @@ export const wordsSlice = createSlice({
           error: null,
         };
       })
-      .addCase(fetchWords.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // deleteWord
-      .addCase(deleteWord.pending, state => {
-        state.isLoading = true;
-      })
       .addCase(deleteWord.fulfilled, (state, action) => {
         state.isLoading = false;
         const index = state.items.findIndex(item => item.id === action.payload);
         state.items.splice(index, 1);
-      })
-      .addCase(deleteWord.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      //addWord
-      .addCase(addWord.pending, state => {
-        state.isLoading = true;
+        state.error = null;
       })
       .addCase(addWord.fulfilled, (state, action) => {
         state.isLoading = false;
         state.items.push(action.payload);
-      })
-      .addCase(addWord.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // checkWord
-      .addCase(checkWord.pending, state => {
-        state.isLoading = true;
+        state.error = null;
       })
       .addCase(checkWord.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -66,14 +40,7 @@ export const wordsSlice = createSlice({
           item => item.id === action.payload.id
         );
         state.items.splice(index, 1, action.payload);
-      })
-      .addCase(checkWord.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      // editWord
-      .addCase(editWord.pending, state => {
-        state.isLoading = true;
+        state.error = null;
       })
       .addCase(editWord.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -81,11 +48,33 @@ export const wordsSlice = createSlice({
           item => item.id === action.payload.id
         );
         state.items.splice(index, 1, action.payload);
+        state.error = null;
       })
-      .addCase(editWord.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      });
+      .addMatcher(
+        isAnyOf(
+          editWord.pending,
+          checkWord.pending,
+          addWord.pending,
+          deleteWord.pending,
+          fetchWords.pending
+        ),
+        state => {
+          state.isLoading = true;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          editWord.rejected,
+          checkWord.rejected,
+          addWord.rejected,
+          deleteWord.rejected,
+          fetchWords.rejected
+        ),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      );
   },
 });
 
