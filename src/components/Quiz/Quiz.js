@@ -10,6 +10,7 @@ import {
 import { Option } from 'components/Option/Option';
 import Button from 'components/Button/Button';
 import { OptionList } from './Quiz.styled';
+import { Report } from 'notiflix';
 
 export const Quiz = ({ vocabulary }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -66,7 +67,7 @@ export const Quiz = ({ vocabulary }) => {
 
   const handleStartQuiz = () => {
     if (vocabulary.length < 4) {
-      alert('Add more words to start a quiz.');
+      Report.failure('Oops!', 'Add at least 4 words to start a quiz.');
       return;
     }
     dispatch(resetQuiz());

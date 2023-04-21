@@ -1,10 +1,11 @@
 import { Suspense } from 'react';
-import { /* useLocation,  */ Outlet } from 'react-router-dom';
-/* import Loader from 'components/Skeleton/Skeleton';*/
+import { useLocation, Outlet } from 'react-router-dom';
+import Loader from 'components/Skeleton';
 import { Container, Header, Nav, StyledNavLink, Main } from './Layout.styled';
 
 export const Layout = () => {
-  /*   const location = useLocation();*/
+  const location = useLocation();
+
   return (
     <Container>
       <Header>
@@ -15,11 +16,7 @@ export const Layout = () => {
         </Nav>
       </Header>
       <Main>
-        <Suspense
-          fallback={
-            <div>Loading...</div>
-          } /* {{<div></div> <Loader page={location.pathname} /> }} */
-        >
+        <Suspense fallback={<Loader page={location.pathname} />}>
           <Outlet />
         </Suspense>
       </Main>

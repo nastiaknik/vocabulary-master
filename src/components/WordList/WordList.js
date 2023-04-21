@@ -4,7 +4,7 @@ import { fetchWords } from 'redux/oparations';
 import { WordItem } from 'components/WordItem/WordItem';
 import { List } from './WordList.styled';
 
-export const WordList = ({ words }) => {
+export const WordList = ({ words, page }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export const WordList = ({ words }) => {
   return (
     <List>
       {words.map(word => (
-        <WordItem word={word} key={word.id} />
+        <WordItem word={word} key={word.id} page={page} />
       ))}
     </List>
   );

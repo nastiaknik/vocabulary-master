@@ -3,16 +3,17 @@ import { useDispatch } from 'react-redux';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 import { FormControlLabel, Checkbox } from '@mui/material';
 import { deleteWord, checkWord } from 'redux/oparations';
+import { WordEditForm } from 'components/WordEditForm/WordEditForm';
 import {
   Item,
   Word,
   EngWord,
   Translation,
   DeleteBtn,
-  Icon,
+  DeleteIcon,
 } from './WordItem.styled';
 
-export const WordItem = ({ word }) => {
+export const WordItem = ({ word, page }) => {
   const [isChecked, setIsChecked] = useState(word.isChecked);
   const dispatch = useDispatch();
 
@@ -32,8 +33,37 @@ export const WordItem = ({ word }) => {
   };
 
   const toggleChecked = () => {
-    dispatch(checkWord({ ...word, isChecked: !isChecked }));
-    setIsChecked(prevState => !prevState);
+    if (page === 'dictionary') {
+      Confirm.show(
+        'You know the word?',
+        'Are you sure you want to move the word to your vocabulary?',
+        'Move',
+        'Cancel',
+        () => {
+          dispatch(checkWord({ ...word, isChecked: !isChecked }));
+          setIsChecked(prevState => !prevState);
+        },
+        () => {
+          return;
+        }
+      );
+    } else if (page === 'vocabulary') {
+      Confirm.show(
+        "You don't know the word?",
+        'Are you sure you want to move the word to your dictionary?',
+        'Move',
+        'Cancel',
+        () => {
+          dispatch(checkWord({ ...word, isChecked: !isChecked }));
+          setIsChecked(prevState => !prevState);
+        },
+        () => {
+          return;
+        }
+      );
+    } else {
+      return;
+    }
   };
 
   /*   const openEditFormModal = () => {};
@@ -50,11 +80,10 @@ export const WordItem = ({ word }) => {
         <EngWord>{word.engWord}</EngWord>—
         <Translation>{word.translation}</Translation>
       </Word>
+      <WordEditForm word={word} />
       <DeleteBtn type="button" onClick={() => handleDelete(word.id)}>
-        <Icon />
+        <DeleteIcon />
       </DeleteBtn>
-      {/*       <button type="button">Edit</button>
-       */}
     </Item>
   );
 };

@@ -43,7 +43,6 @@ export const quizSlice = createSlice({
       };
     },
     loadQuestions: (state, action) => {
-      console.log(state.quizQuestions);
       return {
         ...state,
         quizQuestions: action.payload,
@@ -68,9 +67,7 @@ export const quizSlice = createSlice({
         }
         return question;
       });
-      console.log(isCorrect);
       const score = isCorrect ? state.score + 1 : state.score;
-      console.log(score);
       if (state.currentQuestionIndex === state.quizQuestions.length - 1) {
         return {
           ...state,

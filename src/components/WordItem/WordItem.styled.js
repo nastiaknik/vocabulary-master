@@ -46,7 +46,7 @@ export const Word = styled.div`
   }
 `;
 
-export const Icon = styled(MdDelete)`
+export const DeleteIcon = styled(MdDelete)`
   font-size: 20px;
   color: black;
 `;
@@ -67,7 +67,7 @@ export const DeleteBtn = styled.button`
   :focus {
     background-color: #fff2f0;
 
-    > ${Icon} {
+    > ${DeleteIcon} {
       color: #ed593b;
     }
   }
